@@ -1,0 +1,19 @@
+# _config.yml
+title: "大学实验作业展示"
+description: "记录大学期间的实验学习历程"
+baseurl: "" # 如果部署在子路径，填写子路径名
+url: "https://your-username.github.io" # 你的网站地址
+
+# 集合配置
+collections:
+  experiments:
+    output: true
+    permalink: /experiments/:path/
+
+# 默认设置
+defaults:
+  - scope:
+      path: ""
+      type: "experiments"
+    values:
+      layout: "experiment"

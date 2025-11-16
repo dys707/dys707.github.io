@@ -1,0 +1,33 @@
+<!-- experiments.html -->
+---
+layout: default
+title: 实验列表
+---
+
+<section class="page-header">
+    <div class="container">
+        <h1>实验列表</h1>
+        <p>浏览所有大学期间完成的实验作业</p>
+    </div>
+</section>
+
+<section class="experiments-list">
+    <div class="container">
+        <div class="filter-options">
+            <button class="filter-btn active" data-filter="all">全部</button>
+            <button class="filter-btn" data-filter="programming">编程</button>
+            <button class="filter-btn" data-filter="hardware">硬件</button>
+            <button class="filter-btn" data-filter="theory">理论</button>
+        </div>
+
+        <div class="experiment-items">
+            {% for experiment in site.experiments %}
+            <div class="experiment-item" data-category="{{ experiment.tags | first }}">
+                <h3><a href="{{ experiment.url }}">{{ experiment.title }}</a></h3>
+                <p class="meta">课程：{{ experiment.course }} | 日期：{{ experiment.date | date: "%Y-%m-%d" }}</p>
+                <p>{{ experiment.description }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
