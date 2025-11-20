@@ -1,0 +1,23 @@
+---
+---
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if page.title %}{{ page.title }} - {% endif %}大学实验作业展示</title>
+    <link rel="stylesheet" href="{{ '/css/style.css' | relative_url }}">
+    <link rel="icon" href="{{ '/images/logo.png' | relative_url }} " type="image/png">
+</head>
+<body class="{% if page.layout == 'experiment' %}experiment-layout{% endif %}">
+    {% include header.html %}
+
+    <main>
+        {{ content }}
+    </main>
+
+    {% include footer.html %}
+
+    <script src="{{ '/js/script.js' | relative_url }}"></script>
+</body>
+</html>
