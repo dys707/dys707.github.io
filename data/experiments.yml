@@ -1,4 +1,4 @@
-# _data/experiments.yml
+# _data/_experiments.yml
 - id: data-structure-1
   title: "实验一：数据结构与算法实现"
   course: "数据结构"
@@ -11,12 +11,12 @@
     - name: "源代码包"
       icon: "📦"
       description: "包含完整的实验源代码和项目文件"
-      file: "/experiments/data-structure-1/source-code.zip"
+      file: "/_experiments/data-structure-1/source-code.zip"
     - name: "实验报告"
       icon: "📄"
       description: "详细的实验报告文档"
-      file: "/experiments/data-structure-1/report.docx"
-  reportFile: "/experiments/data-structure-1/report.pdf"
+      file: "/_experiments/data-structure-1/report.docx"
+  reportFile: "/_experiments/data-structure-1/report.pdf"
 
 - id: data-structure-2
   title: "实验二：高级数据结构"
@@ -30,11 +30,11 @@
     - name: "源代码包"
       icon: "📦"
       description: "包含完整的实验源代码和项目文件"
-      file: "/experiments/data-structure-2/source-code.zip"
+      file: "/_experiments/data-structure-2/source-code.zip"
     - name: "实验报告"
       icon: "📄"
       description: "详细的实验报告文档"
-      file: "/experiments/data-structure-2/report.docx"
-  reportFile: "/experiments/data-structure-2/report.pdf"
+      file: "/_experiments/data-structure-2/report.docx"
+  reportFile: "/_experiments/data-structure-2/report.pdf"
 
 # 更多实验...

@@ -1,4 +1,3 @@
-<!-- experiments.html -->
 ---
 layout: default
 title: 实验列表
@@ -13,21 +12,392 @@ title: 实验列表
 
 <section class="experiments-list">
     <div class="container">
+        <!-- 筛选选项 -->
         <div class="filter-options">
             <button class="filter-btn active" data-filter="all">全部</button>
             <button class="filter-btn" data-filter="programming">编程</button>
             <button class="filter-btn" data-filter="hardware">硬件</button>
             <button class="filter-btn" data-filter="theory">理论</button>
+            <button class="filter-btn" data-filter="network">网络</button>
         </div>
 
+        <!-- 排序选项 -->
+        <div class="sort-options">
+            <label for="sort-select">排序方式：</label>
+            <select id="sort-select">
+                <option value="date-desc">日期（从新到旧）</option>
+                <option value="date-asc">日期（从旧到新）</option>
+                <option value="course">课程</option>
+                <option value="difficulty">难度</option>
+            </select>
+        </div>
+
+        <!-- 统计信息 -->
+        <div class="stats-info">
+            <p>共 <strong>{{ site.experiments | size }}</strong> 个项目</p>
+        </div>
+
+        <!-- 实验列表 -->
         <div class="experiment-items">
-            {% for experiment in site.experiments %}
-            <div class="experiment-item" data-category="{{ experiment.tags | first }}">
-                <h3><a href="{{ experiment.url }}">{{ experiment.title }}</a></h3>
-                <p class="meta">课程：{{ experiment.course }} | 日期：{{ experiment.date | date: "%Y-%m-%d" }}</p>
-                <p>{{ experiment.description }}</p>
+            <!-- 按日期倒序排列（最新的在前面） -->
+            {% assign sorted_experiments = site.experiments | sort: "date" | reverse %}
+
+            {% for experiment in sorted_experiments %}
+            <div class="experiment-item"
+                 data-category="{{ experiment.tags | first | downcase }}"
+                 data-date="{{ experiment.date | date: '%Y-%m-%d' }}"
+                 data-difficulty="{{ experiment.difficulty }}"
+                 data-course="{{ experiment.course }}">
+                <div class="experiment-item-header">
+                    <h3>
+                        <a href="{{ experiment.url | relative_url }}">
+                            {{ experiment.title }}
+                        </a>
+                    </h3>
+                    <span class="difficulty-badge difficulty-{{ experiment.difficulty | downcase }}">
+                        {{ experiment.difficulty }}
+                    </span>
+                </div>
+
+                <div class="experiment-meta">
+                    <span class="meta-course">
+                        <i class="icon">📚</i> {{ experiment.course }}
+                    </span>
+                    <span class="meta-date">
+                        <i class="icon">📅</i> {{ experiment.date | date: "%Y年%m月%d日" }}
+                    </span>
+                    <span class="meta-tags">
+                        <i class="icon">🏷️</i>
+                        {% for tag in experiment.tags %}
+                        <span class="tag">{{ tag }}</span>
+                        {% endfor %}
+                    </span>
+                </div>
+
+                <p class="experiment-description">{{ experiment.description }}</p>
+
+                <div class="experiment-actions">
+                    <a href="{{ experiment.url | relative_url }}" class="btn-small">
+                        查看详情
+                    </a>
+                    {% if experiment.reportFile %}
+                    <a href="{{ '/assets/experiments/' | append: experiment.resource_dir | append: '/' | append: experiment.reportFile | relative_url }}"
+                       class="btn-small btn-outline" target="_blank">
+                        预览报告
+                    </a>
+                    {% endif %}
+                </div>
             </div>
             {% endfor %}
         </div>
+
+        <!-- 空状态提示 -->
+        <div id="no-experiments" class="no-experiments-message" style="display: none;">
+            <p>暂无符合条件的实验</p>
+        </div>
     </div>
 </section>
+
+<!-- 添加列表页专属样式 -->
+<style>
+/* 实验列表页专属样式 */
+.filter-options {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.filter-btn {
+    background: white;
+    border: 2px solid #667eea;
+    color: #667eea;
+    padding: 8px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 500;
+}
+
+.filter-btn.active, .filter-btn:hover {
+    background: #667eea;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+}
+
+.sort-options {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 8px;
+}
+
+.sort-options label {
+    font-weight: 500;
+    color: #2c3e50;
+}
+
+#sort-select {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background: white;
+}
+
+.stats-info {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 15px;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    color: white;
+    border-radius: 8px;
+    font-size: 1.1rem;
+}
+
+.experiment-items {
+    display: grid;
+    gap: 25px;
+}
+
+.experiment-item {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    transition: all 0.3s ease;
+    border-left: 4px solid #667eea;
+}
+
+.experiment-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.experiment-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.experiment-item-header h3 {
+    margin: 0;
+    flex: 1;
+}
+
+.experiment-item-header h3 a {
+    color: #2c3e50;
+    font-size: 1.4rem;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.experiment-item-header h3 a:hover {
+    color: #667eea;
+}
+
+.difficulty-badge {
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-left: 15px;
+}
+
+.difficulty-easy {
+    background: #d4edda;
+    color: #155724;
+}
+
+.difficulty-medium {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.difficulty-hard {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.experiment-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #ecf0f1;
+}
+
+.meta-course, .meta-date, .meta-tags {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.9rem;
+    color: #7f8c8d;
+}
+
+.meta-tags {
+    flex-wrap: wrap;
+}
+
+.tag {
+    background: #e3f2fd;
+    color: #1976d2;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    margin: 0 2px;
+}
+
+.experiment-description {
+    color: #5d6d7e;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    font-size: 1.1rem;
+}
+
+.experiment-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid #667eea;
+    color: #667eea;
+}
+
+.btn-outline:hover {
+    background: #667eea;
+    color: white;
+}
+
+.no-experiments-message {
+    text-align: center;
+    padding: 60px 20px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.no-experiments-message p {
+    font-size: 1.2rem;
+    color: #7f8c8d;
+    margin: 0;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .experiment-item-header {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .difficulty-badge {
+        align-self: flex-start;
+        margin-left: 0;
+    }
+
+    .experiment-meta {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .experiment-actions {
+        justify-content: center;
+    }
+
+    .filter-options {
+        justify-content: flex-start;
+    }
+}
+</style>
+
+<!-- 添加交互功能 -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // 筛选功能
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const experimentItems = document.querySelectorAll('.experiment-item');
+    const noExperimentsMessage = document.getElementById('no-experiments');
+    const sortSelect = document.getElementById('sort-select');
+
+    // 筛选按钮点击事件
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // 更新激活状态
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+
+            const filterValue = this.getAttribute('data-filter');
+            filterExperiments(filterValue);
+        });
+    });
+
+    // 排序选择事件
+    sortSelect.addEventListener('change', function() {
+        sortExperiments(this.value);
+    });
+
+    // 筛选实验函数
+    function filterExperiments(filterValue) {
+        let visibleCount = 0;
+
+        experimentItems.forEach(item => {
+            if (filterValue === 'all' || item.getAttribute('data-category') === filterValue) {
+                item.style.display = 'block';
+                visibleCount++;
+            } else {
+                item.style.display = 'none';
+            }
+        });
+
+        // 显示/隐藏空状态消息
+        if (visibleCount === 0) {
+            noExperimentsMessage.style.display = 'block';
+        } else {
+            noExperimentsMessage.style.display = 'none';
+        }
+    }
+
+    // 排序实验函数
+    function sortExperiments(sortValue) {
+        const container = document.querySelector('.experiment-items');
+        const items = Array.from(experimentItems);
+
+        items.sort((a, b) => {
+            switch (sortValue) {
+                case 'date-desc':
+                    return new Date(b.getAttribute('data-date')) - new Date(a.getAttribute('data-date'));
+                case 'date-asc':
+                    return new Date(a.getAttribute('data-date')) - new Date(b.getAttribute('data-date'));
+                case 'course':
+                    return a.getAttribute('data-course').localeCompare(b.getAttribute('data-course'));
+                case 'difficulty':
+                    const difficultyOrder = { '简单': 1, '中等': 2, '困难': 3 };
+                    return difficultyOrder[a.getAttribute('data-difficulty')] - difficultyOrder[b.getAttribute('data-difficulty')];
+                default:
+                    return 0;
+            }
+        });
+
+        // 清空容器并重新添加排序后的项目
+        container.innerHTML = '';
+        items.forEach(item => container.appendChild(item));
+    }
+
+    // 初始化：显示所有实验
+    filterExperiments('all');
+});
+</script>

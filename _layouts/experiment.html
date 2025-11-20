@@ -1,0 +1,165 @@
+---
+layout: default
+---
+
+<body class="experiment-layout">
+    {% include header.html %}
+
+    <section class="experiment-header">
+        <div class="container">
+            <h1>{{ page.title }}</h1>
+            <p>{{ page.description }}</p>
+            <div class="experiment-meta">
+                <span class="meta-item">课程：{{ page.course }}</span>
+                <span class="meta-item">日期：{{ page.date | date: "%Y-%m-%d" }}</span>
+                <span class="meta-item">难度：{{ page.difficulty }}</span>
+                <span class="meta-item">标签：{{ page.tags | join: "，" }}</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="experiment-content">
+        <div class="container">
+            <!-- 实验内容部分 -->
+            <div class="content-section">
+                <h2>实验简介</h2>
+                {{ content }}
+            </div>
+
+            <!-- 资源下载部分 -->
+            <div class="content-section">
+                <h2>实验资源下载</h2>
+                <div class="download-section">
+                    <p>以下资源可供下载使用：</p>
+                    <div class="download-grid">
+                        <!-- 自动检测是否有源代码包 -->
+                        {% assign has_source_download = false %}
+                        {% for download in page.downloads %}
+                            {% if download.name contains "源代码" or download.name contains "源码" or download.name contains "代码" %}
+                                {% assign has_source_download = true %}
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if has_source_download %}
+                            <!-- 显示正常的源代码包 -->
+                            {% for download in page.downloads %}
+                                {% if download.name contains "源代码" or download.name contains "源码" or download.name contains "代码" %}
+                                <div class="download-card">
+                                    <div class="download-icon">{{ download.icon }}</div>
+                                    <h3>{{ download.name }}</h3>
+                                    <p>{{ download.description }}</p>
+
+                                    {% comment %} 处理 GitHub Release 链接 {% endcomment %}
+                                    {% if download.file contains "github-release:" %}
+                                        {% comment %} 提取 Release ID {% endcomment %}
+                                        {% assign release_id = download.file | remove: "github-release:" %}
+                                        {% assign release_url = site.attachments[release_id] %}
+
+                                        {% if release_url and release_url != "" %}
+                                        <a href="{{ release_url }}" class="btn-small" target="_blank" rel="noopener">
+                                            下载
+                                        </a>
+                                        {% else %}
+                                        <button class="btn-small disabled" disabled>Release 未配置</button>
+                                        {% endif %}
+
+                                    {% else %}
+                                        {% comment %} 处理本地文件 {% endcomment %}
+                                        {% if download.file and download.file != "" %}
+                                        <a href="{{ '/assets/experiments/' | append: page.resource_dir | append: '/' | append: download.file | relative_url }}"
+                                           class="btn-small" download>
+                                            下载
+                                        </a>
+                                        {% else %}
+                                        <button class="btn-small disabled" disabled>不可用</button>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                                {% endif %}
+                            {% endfor %}
+                        {% else %}
+                            <!-- 显示禁用的源代码包 -->
+                            <div class="download-card disabled">
+                                <div class="download-icon">📦</div>
+                                <h3>源代码包</h3>
+                                <p>该实验不包含源代码</p>
+                                <button class="btn-small disabled" disabled>不可用</button>
+                            </div>
+                        {% endif %}
+
+                        <!-- 其他下载项 -->
+                        {% for download in page.downloads %}
+                            {% unless download.name contains "源代码" or download.name contains "源码" or download.name contains "代码" %}
+                            <div class="download-card">
+                                <div class="download-icon">{{ download.icon }}</div>
+                                <h3>{{ download.name }}</h3>
+                                <p>{{ download.description }}</p>
+
+                                {% comment %} 处理 GitHub Release 链接 {% endcomment %}
+                                {% if download.file contains "github-release:" %}
+                                    {% comment %} 提取 Release ID {% endcomment %}
+                                    {% assign release_id = download.file | remove: "github-release:" %}
+                                    {% assign release_url = site.attachments[release_id] %}
+
+                                    {% if release_url and release_url != "" %}
+                                    <a href="{{ release_url }}" class="btn-small" target="_blank" rel="noopener">
+                                        下载
+                                    </a>
+                                    {% else %}
+                                    <button class="btn-small disabled" disabled>Release 未配置</button>
+                                    {% endif %}
+
+                                {% else %}
+                                    {% comment %} 处理本地文件 {% endcomment %}
+                                    {% if download.file and download.file != "" %}
+                                    <a href="{{ '/assets/experiments/' | append: page.resource_dir | append: '/' | append: download.file | relative_url }}"
+                                       class="btn-small" download>
+                                        下载
+                                    </a>
+                                    {% else %}
+                                    <button class="btn-small disabled" disabled>不可用</button>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                            {% endunless %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- PDF预览部分 -->
+            {% if page.reportFile %}
+            <div class="content-section">
+                <h2>实验报告预览</h2>
+                <div class="report-preview">
+                    <div class="preview-container">
+                        <iframe src="{{ '/assets/experiments/' | append: page.resource_dir | append: '/' | append: page.reportFile | relative_url }}"></iframe>
+                    </div>
+                    <div style="text-align: center; margin-top: 25px;">
+                        <a href="{{ '/assets/experiments/' | append: page.resource_dir | append: '/' | append: page.reportFile | relative_url }}"
+                           class="btn" target="_blank" style="font-size: 1.1rem; padding: 12px 25px;">
+                            在新窗口中打开
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <!-- 导航部分 -->
+            <div class="experiment-nav">
+                {% if page.previous %}
+                    <a href="{{ page.previous.url | relative_url }}" class="nav-btn prev">上一个实验</a>
+                {% else %}
+                    <span></span>
+                {% endif %}
+
+                {% if page.next %}
+                    <a href="{{ page.next.url | relative_url }}" class="nav-btn next">下一个实验</a>
+                {% else %}
+                    <span></span>
+                {% endif %}
+            </div>
+        </div>
+    </section>
+    {% include footer.html %}
+</body>

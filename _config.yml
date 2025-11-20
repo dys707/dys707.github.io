@@ -1,14 +1,13 @@
-# _config.yml
 title: "大学实验作业展示"
 description: "记录大学期间的实验学习历程"
 baseurl: "" # 如果部署在子路径，填写子路径名
-url: "https://your-username.github.io" # 你的网站地址
+url: "https://dys707.github.io" # 你的网站地址
 
 # 集合配置
 collections:
   experiments:
     output: true
-    permalink: /experiments/:path/
+    permalink: /experiments/:name/
 
 # 默认设置
 defaults:
@@ -17,3 +16,11 @@ defaults:
       type: "experiments"
     values:
       layout: "experiment"
+
+#OS大文件配置（github release链接）
+attachments:
+  OS1: "https://github.com/dys707/dys707.github.io/releases/download/v1.0.0/source-code.zip"
+  OS2: "https://github.com/dys707/dys707.github.io/releases/download/v1.0.0/OS2.zip"
+  OS3: "https://github.com/dys707/dys707.github.io/releases/download/v1.0.0/OS3.zip"
+  OS4: "https://github.com/dys707/dys707.github.io/releases/download/v1.0.0/OS4.zip"
+  OS5: "https://github.com/dys707/dys707.github.io/releases/download/v1.0.0/OS5.zip"
