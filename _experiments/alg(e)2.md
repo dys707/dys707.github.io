@@ -11,7 +11,7 @@ downloads:
   - name: "实验报告(Word)"
     icon: "📄"
     description: "详细的实验报告文档(Word格式)"
-    file: "alg(e)2_report.docx"
+    file: "alg(e)2_report.doc"
 reportFile: "alg(e)2_report.pdf"
 resources_path: "/assets/experiments/alg(e)2/"
 resource_dir: "alg(e)2" 
