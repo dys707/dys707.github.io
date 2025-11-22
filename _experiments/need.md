@@ -1,0 +1,32 @@
+---
+layout: experiment
+title: "软件需求分析"
+course: "软件需求分析"
+courseId: "software_need"
+date: 2025-11-30
+difficulty: "中等"
+tags: ["理论", "软件需求分析"]
+description: "社区管理系统"
+downloads:
+  - name: "实验报告(Word)"
+    icon: "📄"
+    description: "详细的实验报告文档(Word格式)"
+    file: "need.docx"
+reportFile: "need.pdf"
+resources_path: "/assets/experiments/need/"
+resource_dir: "need" 
+---
+
+### 实验目的
+
+* 小组合作，自选题目，实现需求分析书的撰写
+ 
+### 实验内容
+
+#### 1.  需求分析说明书
+* 自行组队，挑选模板，编写需求分析说明书
+
+
+### 实验结果与分析
+
+* 符合预期...
