@@ -3,7 +3,7 @@ layout: default
 title: 实验列表
 ---
 
-<section class="page-header">
+<section class="banner">
     <div class="container">
         <h1>实验列表</h1>
         <p>浏览所有大学期间完成的实验作业</p>
@@ -12,125 +12,220 @@ title: 实验列表
 
 <section class="experiments-list">
     <div class="container">
-        <!-- 筛选选项 -->
-        <div class="filter-options">
-            <button class="filter-btn active" data-filter="all">全部</button>
-            <button class="filter-btn" data-filter="programming">编程</button>
-            <button class="filter-btn" data-filter="hardware">硬件</button>
-            <button class="filter-btn" data-filter="theory">理论</button>
-            <button class="filter-btn" data-filter="network">网络</button>
-        </div>
-
-        <!-- 排序选项 -->
-        <div class="sort-options">
-            <label for="sort-select">排序方式：</label>
-            <select id="sort-select">
-                <option value="date-desc">日期（从新到旧）</option>
-                <option value="date-asc">日期（从旧到新）</option>
-                <option value="course">课程</option>
-                <option value="difficulty">难度</option>
-            </select>
-        </div>
-
-        <!-- 统计信息 -->
-        <div class="stats-info">
-            <p>共 <strong>{{ site.experiments | size }}</strong> 个项目</p>
-        </div>
-
-        <!-- 实验列表 -->
-        <div class="experiment-items">
-            <!-- 按日期倒序排列（最新的在前面） -->
-            {% assign sorted_experiments = site.experiments | sort: "date" | reverse %}
-
-            {% for experiment in sorted_experiments %}
-            <div class="experiment-item"
-                 data-category="{{ experiment.tags | first | downcase }}"
-                 data-date="{{ experiment.date | date: '%Y-%m-%d' }}"
-                 data-difficulty="{{ experiment.difficulty }}"
-                 data-course="{{ experiment.course }}">
-                <div class="experiment-item-header">
-                    <h3>
-                        <a href="{{ experiment.url | relative_url }}">
-                            {{ experiment.title }}
-                        </a>
-                    </h3>
-                    <span class="difficulty-badge difficulty-{{ experiment.difficulty | downcase }}">
-                        {{ experiment.difficulty }}
-                    </span>
+        <div class="experiments-layout">
+            <!-- 左侧实验列表 -->
+            <div class="experiments-main">
+                <!-- 排序选项 -->
+                <div class="sort-options">
+                    <label for="sort-select">排序方式：</label>
+                    <select id="sort-select">
+                        <option value="date-desc">日期（从新到旧）</option>
+                        <option value="date-asc">日期（从旧到新）</option>
+                        <option value="course">课程</option>
+                        <option value="difficulty">难度</option>
+                    </select>
+                    <br>
+                    <p style="text-align: center; color: #7f8c8d; font-size: 1.1rem;"><i class="icon">🔃</i> 找不到实验？尝试刷新网页<i class="icon">🔃</i> </p>
                 </div>
 
-                <div class="experiment-meta">
-                    <span class="meta-course">
-                        <i class="icon">📚</i> {{ experiment.course }}
-                    </span>
-                    <span class="meta-date">
-                        <i class="icon">📅</i> {{ experiment.date | date: "%Y年%m月%d日" }}
-                    </span>
-                    <span class="meta-tags">
-                        <i class="icon">🏷️</i>
-                        {% for tag in experiment.tags %}
-                        <span class="tag">{{ tag }}</span>
-                        {% endfor %}
-                    </span>
+
+
+                <!-- 统计信息 -->
+                <div class="stats-info">
+                    <p>共 <strong id="experiment-count">{{ site.experiments | size }}</strong> 个项目</p>
                 </div>
 
-                <p class="experiment-description">{{ experiment.description }}</p>
+                <!-- 实验列表 -->
+                <div class="experiment-items">
+                    <!-- 按日期倒序排列（最新的在前面） -->
+                    {% assign sorted_experiments = site.experiments | sort: "date" | reverse %}
 
-                <div class="experiment-actions">
-                    <a href="{{ experiment.url | relative_url }}" class="btn-small">
-                        查看详情
-                    </a>
-                    {% if experiment.reportFile %}
-                    <a href="{{ '/assets/experiments/' | append: experiment.resource_dir | append: '/' | append: experiment.reportFile | relative_url }}"
-                       class="btn-small btn-outline" target="_blank">
-                        预览报告
-                    </a>
-                    {% endif %}
+                    {% for experiment in sorted_experiments %}
+                    <div class="experiment-item"
+                         data-category="{{ experiment.tags | first | downcase }}"
+                         data-date="{{ experiment.date | date: '%Y-%m-%d' }}"
+                         data-difficulty="{{ experiment.difficulty }}"
+                         data-course="{{ experiment.course }}"
+                         data-courseld="{{ experiment.courseId }}">
+                        <div class="experiment-item-header">
+                            <h3>
+                                <a href="{{ experiment.url | relative_url }}">
+                                    {{ experiment.title }}
+                                </a>
+                            </h3>
+                            <span class="difficulty-badge difficulty-{{ experiment.difficulty | downcase }}">
+                                {{ experiment.difficulty }}
+                            </span>
+                        </div>
+
+                        <div class="experiment-meta">
+                            <span class="meta-course">
+                                <i class="icon">📚</i> {{ experiment.course }}
+                            </span>
+                            <span class="meta-date">
+                                <i class="icon">📅</i> {{ experiment.date | date: "%Y年%m月%d日" }}
+                            </span>
+                            <span class="meta-tags">
+                                <i class="icon">🏷️</i>
+                                {% for tag in experiment.tags %}
+                                <span class="tag">{{ tag }}</span>
+                                {% endfor %}
+                            </span>
+                        </div>
+
+                        <p class="experiment-description">{{ experiment.description }}</p>
+
+                        <div class="experiment-actions">
+                            <a href="{{ experiment.url | relative_url }}" class="btn-small">
+                                查看详情
+                            </a>
+                            {% if experiment.reportFile %}
+                            <a href="{{ '/assets/experiments/' | append: experiment.resource_dir | append: '/' | append: experiment.reportFile | relative_url }}"
+                               class="btn-small btn-outline" target="_blank">
+                                预览报告
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <!-- 空状态提示 -->
+                <div id="no-experiments" class="no-experiments-message" style="display: none;">
+                    <p>暂无符合条件的实验</p>
                 </div>
             </div>
-            {% endfor %}
-        </div>
 
-        <!-- 空状态提示 -->
-        <div id="no-experiments" class="no-experiments-message" style="display: none;">
-            <p>暂无符合条件的实验</p>
+            <!-- 右侧筛选栏 -->
+            <div class="filter-sidebar">
+                <div class="filter-section">
+                    <h3>标签筛选</h3>
+                    <div class="filter-tags">
+                        <button class="filter-tag active" data-filter="all">全部</button>
+                        <button class="filter-tag" data-filter="编程">编程</button>
+                        <button class="filter-tag" data-filter="硬件">硬件</button>
+                        <button class="filter-tag" data-filter="理论">理论</button>
+                        <button class="filter-tag" data-filter="应用">应用</button>
+                    </div>
+                </div>
+
+                <div class="filter-section">
+                    <h3>课程筛选</h3>
+                    <div class="filter-courses">
+                        <button class="filter-course active" data-course="all">全部课程</button>
+                        {% assign all_courses = site.experiments | map: "course" | uniq %}
+                        {% for course in all_courses %}
+                        <button class="filter-course" data-course="{{ course }}">{{ course }}</button>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="filter-section">
+                    <h3>难度筛选</h3>
+                    <div class="filter-difficulty">
+                        <button class="filter-diff active" data-difficulty="all">全部难度</button>
+                        <button class="filter-diff" data-difficulty="简单">简单</button>
+                        <button class="filter-diff" data-difficulty="中等">中等</button>
+                        <button class="filter-diff" data-difficulty="困难">困难</button>
+                    </div>
+                </div>
+
+                <div class="filter-actions">
+                    <button id="reset-filters" class="btn-outline">重置筛选</button>
+                </div>
+            </div>
         </div>
     </div>
 </section>
 
 <!-- 添加列表页专属样式 -->
 <style>
-/* 实验列表页专属样式 */
-.filter-options {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 30px;
-    padding: 20px;
-    background: rgba(255, 255, 255, 0.8);
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+/* 实验列表页布局 */
+.experiments-layout {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    gap: 30px;
+    align-items: start;
 }
 
-.filter-btn {
+.experiments-main {
+    grid-column: 1;
+}
+
+.filter-sidebar {
+    grid-column: 2;
+    position: sticky;
+    top: 20px;
     background: white;
-    border: 2px solid #667eea;
-    color: #667eea;
-    padding: 8px 20px;
-    border-radius: 20px;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    height: fit-content;
+}
+
+/* 筛选栏样式 */
+.filter-section {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #ecf0f1;
+}
+
+.filter-section:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.filter-section h3 {
+    margin: 0 0 15px 0;
+    color: #2c3e50;
+    font-size: 1.2rem;
+    font-weight: 600;
+}
+
+.filter-tags, .filter-courses, .filter-difficulty {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.filter-tag, .filter-course, .filter-diff {
+    background: white;
+    border: 1px solid #ddd;
+    color: #555;
+    padding: 8px 12px;
+    border-radius: 6px;
     cursor: pointer;
     transition: all 0.3s;
+    text-align: left;
+    font-size: 0.9rem;
+}
+
+.filter-tag:hover, .filter-course:hover, .filter-diff:hover {
+    border-color: #667eea;
+    color: #667eea;
+    transform: translateX(3px);
+}
+
+.filter-tag.active, .filter-course.active, .filter-diff.active {
+    background: #667eea;
+    color: white;
+    border-color: #667eea;
     font-weight: 500;
 }
 
-.filter-btn.active, .filter-btn:hover {
-    background: #667eea;
-    color: white;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+.filter-actions {
+    margin-top: 20px;
+    text-align: center;
 }
 
+#reset-filters {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    font-weight: 500;
+}
+
+/* 原有样式保持 */
 .sort-options {
     display: flex;
     align-items: center;
@@ -272,6 +367,21 @@ title: 实验列表
     flex-wrap: wrap;
 }
 
+.btn-small, .btn-outline {
+    padding: 8px 16px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-small {
+    background: #667eea;
+    color: white;
+}
+
 .btn-outline {
     background: transparent;
     border: 2px solid #667eea;
@@ -299,6 +409,17 @@ title: 实验列表
 
 /* 响应式设计 */
 @media (max-width: 768px) {
+    .experiments-layout {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .filter-sidebar {
+        grid-column: 1;
+        position: static;
+        order: -1;
+    }
+
     .experiment-item-header {
         flex-direction: column;
         gap: 10px;
@@ -317,32 +438,94 @@ title: 实验列表
     .experiment-actions {
         justify-content: center;
     }
-
-    .filter-options {
-        justify-content: flex-start;
-    }
 }
 </style>
 
 <!-- 添加交互功能 -->
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // 筛选功能
-    const filterButtons = document.querySelectorAll('.filter-btn');
+// 使用更稳定的初始化方式
+function initializeFilterSystem() {
+    // 获取所有元素
+    const filterTags = document.querySelectorAll('.filter-tag');
+    const filterCourses = document.querySelectorAll('.filter-course');
+    const filterDiffs = document.querySelectorAll('.filter-diff');
     const experimentItems = document.querySelectorAll('.experiment-item');
     const noExperimentsMessage = document.getElementById('no-experiments');
     const sortSelect = document.getElementById('sort-select');
+    const resetButton = document.getElementById('reset-filters');
+    const experimentCountElement = document.getElementById('experiment-count');
 
-    // 筛选按钮点击事件
-    filterButtons.forEach(button => {
+    // 检查是否成功获取到元素
+    if (experimentItems.length === 0) {
+        console.warn('未找到实验项目，可能是页面尚未完全加载');
+        return false;
+    }
+
+    // 当前筛选状态
+    let currentTag = 'all';
+    let currentCourse = 'all';
+    let currentDifficulty = 'all';
+
+    // 标签筛选按钮点击事件
+    filterTags.forEach(button => {
         button.addEventListener('click', function() {
-            // 更新激活状态
-            filterButtons.forEach(btn => btn.classList.remove('active'));
+            filterTags.forEach(btn => btn.classList.remove('active'));
             this.classList.add('active');
-
-            const filterValue = this.getAttribute('data-filter');
-            filterExperiments(filterValue);
+            currentTag = this.getAttribute('data-filter');
+            applyFilters();
         });
+    });
+
+    // 课程筛选按钮点击事件
+    filterCourses.forEach(button => {
+        button.addEventListener('click', function() {
+            filterCourses.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            currentCourse = this.getAttribute('data-course');
+            applyFilters();
+        });
+    });
+
+    // 难度筛选按钮点击事件
+    filterDiffs.forEach(button => {
+        button.addEventListener('click', function() {
+            filterDiffs.forEach(btn => btn.classList.remove('active'));
+            this.classList.add('active');
+            currentDifficulty = this.getAttribute('data-difficulty');
+            applyFilters();
+        });
+    });
+
+    // 重置筛选按钮
+    resetButton.addEventListener('click', function() {
+        // 重置所有筛选按钮
+        filterTags.forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.getAttribute('data-filter') === 'all') {
+                btn.classList.add('active');
+            }
+        });
+
+        filterCourses.forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.getAttribute('data-course') === 'all') {
+                btn.classList.add('active');
+            }
+        });
+
+        filterDiffs.forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.getAttribute('data-difficulty') === 'all') {
+                btn.classList.add('active');
+            }
+        });
+
+        // 重置筛选状态
+        currentTag = 'all';
+        currentCourse = 'all';
+        currentDifficulty = 'all';
+
+        applyFilters();
     });
 
     // 排序选择事件
@@ -350,12 +533,28 @@ document.addEventListener('DOMContentLoaded', function() {
         sortExperiments(this.value);
     });
 
-    // 筛选实验函数
-    function filterExperiments(filterValue) {
+    // 应用筛选函数
+    function applyFilters() {
         let visibleCount = 0;
 
         experimentItems.forEach(item => {
-            if (filterValue === 'all' || item.getAttribute('data-category') === filterValue) {
+            // 确保数据属性存在
+            const itemTag = item.getAttribute('data-category') || '';
+            const itemCourse = item.getAttribute('data-course') || '';
+            const itemDifficulty = item.getAttribute('data-difficulty') || '';
+
+            // 使用更宽松的匹配逻辑
+            const tagMatch = currentTag === 'all' ||
+                            itemTag === currentTag.toLowerCase() ||
+                            itemTag.includes(currentTag.toLowerCase());
+
+            const courseMatch = currentCourse === 'all' ||
+                              itemCourse === currentCourse;
+
+            const difficultyMatch = currentDifficulty === 'all' ||
+                                  itemDifficulty === currentDifficulty;
+
+            if (tagMatch && courseMatch && difficultyMatch) {
                 item.style.display = 'block';
                 visibleCount++;
             } else {
@@ -363,17 +562,28 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // 显示/隐藏空状态消息
-        if (visibleCount === 0) {
-            noExperimentsMessage.style.display = 'block';
-        } else {
-            noExperimentsMessage.style.display = 'none';
+        // 更新实验计数
+        if (experimentCountElement) {
+            experimentCountElement.textContent = visibleCount;
         }
+
+        // 显示/隐藏空状态消息
+        if (noExperimentsMessage) {
+            if (visibleCount === 0) {
+                noExperimentsMessage.style.display = 'block';
+            } else {
+                noExperimentsMessage.style.display = 'none';
+            }
+        }
+
+        return true;
     }
 
     // 排序实验函数
     function sortExperiments(sortValue) {
         const container = document.querySelector('.experiment-items');
+        if (!container) return;
+
         const items = Array.from(experimentItems);
 
         items.sort((a, b) => {
@@ -383,10 +593,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 case 'date-asc':
                     return new Date(a.getAttribute('data-date')) - new Date(b.getAttribute('data-date'));
                 case 'course':
-                    return a.getAttribute('data-course').localeCompare(b.getAttribute('data-course'));
+                    return (a.getAttribute('data-course') || '').localeCompare(b.getAttribute('data-course') || '');
                 case 'difficulty':
                     const difficultyOrder = { '简单': 1, '中等': 2, '困难': 3 };
-                    return difficultyOrder[a.getAttribute('data-difficulty')] - difficultyOrder[b.getAttribute('data-difficulty')];
+                    const aDiff = a.getAttribute('data-difficulty') || '简单';
+                    const bDiff = b.getAttribute('data-difficulty') || '简单';
+                    return difficultyOrder[aDiff] - difficultyOrder[bDiff];
                 default:
                     return 0;
             }
@@ -395,9 +607,50 @@ document.addEventListener('DOMContentLoaded', function() {
         // 清空容器并重新添加排序后的项目
         container.innerHTML = '';
         items.forEach(item => container.appendChild(item));
+
+        // 重新应用筛选，确保显示状态正确
+        applyFilters();
     }
 
     // 初始化：显示所有实验
-    filterExperiments('all');
+    const initSuccess = applyFilters();
+
+    if (initSuccess) {
+        console.log('筛选系统初始化成功');
+    } else {
+        console.warn('筛选系统初始化可能存在问题');
+    }
+
+    return initSuccess;
+}
+
+// 多种初始化方式确保稳定性
+document.addEventListener('DOMContentLoaded', function() {
+    // 立即尝试初始化
+    let initialized = initializeFilterSystem();
+
+    // 如果初始化失败，延迟重试
+    if (!initialized) {
+        console.log('延迟初始化筛选系统...');
+        setTimeout(() => {
+            initialized = initializeFilterSystem();
+            if (!initialized) {
+                console.error('筛选系统初始化失败');
+            }
+        }, 500);
+    }
+});
+
+// 添加页面可见性变化时的重新初始化
+document.addEventListener('visibilitychange', function() {
+    if (!document.hidden) {
+        // 页面变为可见时，重新检查筛选系统
+        setTimeout(initializeFilterSystem, 100);
+    }
+});
+
+// 添加窗口加载完成后的检查
+window.addEventListener('load', function() {
+    setTimeout(initializeFilterSystem, 100);
 });
 </script>

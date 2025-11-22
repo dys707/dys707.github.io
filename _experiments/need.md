@@ -15,6 +15,7 @@ downloads:
 reportFile: "need.pdf"
 resources_path: "/assets/experiments/need/"
 resource_dir: "need" 
+permalink: /experiments/need/
 ---
 
 ### 实验目的
