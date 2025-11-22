@@ -1,4 +1,9 @@
 ---
+# 🚨 特殊说明 🚨
+# 这个文件放在这里是因为 _experiments/need.md 无法正常生成
+# Jekyll 集合处理有未知问题，使用页面目录方式绕开
+# 如果以后要添加新的实验，请优先使用 _experiments/ 集合方式
+# 这个文件是个特例！特例！特例！
 layout: experiment
 title: "软件需求分析"
 course: "软件需求分析"
@@ -15,6 +20,7 @@ downloads:
 reportFile: "need.pdf"
 resources_path: "/assets/experiments/need/"
 resource_dir: "need"
+permalink: /experiments/need/
 ---
 
 ### 实验目的
