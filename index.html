@@ -79,9 +79,41 @@
     <footer>
         <div class="container">
             <p>&copy; 2023 大学实验作业展示 | 使用 GitHub Pages 部署</p>
+            <div class="site-footer">
+                <p>
+                    <span id="footerVisitCount">本站总访问量: 正在统计...</span>
+                </p>
+            </div>
+             <!-- 在横幅区域添加访问统计 -->
+            <div class="visit-stats" style="margin-top: 20px; color: white; font-size: 1.1rem;">
+                <span id="visitCount">正在加载访问次数...</span>
+            </div>
         </div>
     </footer>
 
     <script src="js/script.js"></script>
+    <!-- 使用 localStorage 实现简单访问统计 -->
+    <script>
+        // 简单的访问统计
+        function updateVisitCount() {
+            // 获取当前统计
+            let visitData = JSON.parse(localStorage.getItem('siteVisitData') || '{"count": 0, "lastVisit": ""}');
+
+            // 检查是否是今天第一次访问
+            const today = new Date().toDateString();
+            if (visitData.lastVisit !== today) {
+                visitData.count += 1;
+                visitData.lastVisit = today;
+                localStorage.setItem('siteVisitData', JSON.stringify(visitData));
+            }
+
+            // 更新显示
+            document.getElementById('visitCount').textContent = `总访问次数: ${visitData.count}`;
+            document.getElementById('footerVisitCount').textContent = `本站总访问量: ${visitData.count} 次`;
+        }
+
+        // 页面加载时更新统计
+        document.addEventListener('DOMContentLoaded', updateVisitCount);
+    </script>
 </body>
 </html>
